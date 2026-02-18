@@ -14,8 +14,8 @@ import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
 import { StatsModal } from "@/components/stats-modal";
 import { Colors } from "@/constants/theme";
+import { useConvexFavorites } from "@/hooks/use-convex-favorites";
 import { usePokemonDetail } from "@/hooks/use-pokemon-detail";
-import { useFavoritesStore } from "@/store/use-favorites-store";
 
 function capitalize(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -83,12 +83,11 @@ export default function PokemonDetailScreen() {
     const navigation = useNavigation();
     const colorScheme = useColorScheme() ?? "light";
     const theme = Colors[colorScheme];
-    const { pokemon, isLoading, error } = usePokemonDetail(parseInt(id, 10));
-
-    const addFavorite = useFavoritesStore((s) => s.addFavorite);
-    const removeFavorite = useFavoritesStore((s) => s.removeFavorite);
     const pokemonId = parseInt(id, 10);
-    const isFav = useFavoritesStore((s) => s.favorites.some((p) => p.id === pokemonId));
+    const { pokemon, isLoading, error } = usePokemonDetail(pokemonId);
+
+    const { addFavorite, removeFavorite, isFavorite } = useConvexFavorites();
+    const isFav = isFavorite(pokemonId);
 
     const toggleFavorite = useCallback(() => {
         if (!pokemon) return;

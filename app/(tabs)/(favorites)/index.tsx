@@ -1,5 +1,6 @@
 import { Link } from "expo-router";
 import {
+    ActivityIndicator,
     Pressable,
     Text,
     View,
@@ -10,13 +11,13 @@ import Animated, { LinearTransition } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Colors } from "@/constants/theme";
-import { useFavoritesStore } from "@/store/use-favorites-store";
+import { useConvexFavorites } from "@/hooks/use-convex-favorites";
 import { PokemonGridItem } from "../(pokedex)/index";
 
 export default function FavoritesScreen() {
     const colorScheme = useColorScheme() ?? "light";
     const theme = Colors[colorScheme];
-    const { favorites } = useFavoritesStore();
+    const { favorites, isLoading } = useConvexFavorites();
     const insets = useSafeAreaInsets();
     const { width } = useWindowDimensions();
 
@@ -24,6 +25,22 @@ export default function FavoritesScreen() {
     const gap = 14;
     const padding = 16;
     const itemWidth = (width - padding * 2 - gap * (numColumns - 1)) / numColumns;
+
+    // Show loading spinner while Convex is fetching
+    if (isLoading) {
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: theme.background,
+                }}
+            >
+                <ActivityIndicator size="large" color={theme.tint} />
+            </View>
+        );
+    }
 
     // Render "No Favorites" state
     if (favorites.length === 0) {
