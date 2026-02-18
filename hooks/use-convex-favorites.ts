@@ -15,7 +15,7 @@ export function useConvexFavorites() {
         name: string;
         spriteUrl: string;
     }) => {
-        addMutation({
+        return addMutation({
             pokemonId: pokemon.id,
             name: pokemon.name,
             spriteUrl: pokemon.spriteUrl,
@@ -23,7 +23,7 @@ export function useConvexFavorites() {
     };
 
     const removeFavorite = (pokemonId: number) => {
-        removeMutation({ pokemonId });
+        return removeMutation({ pokemonId });
     };
 
     const isFavorite = (pokemonId: number) => {

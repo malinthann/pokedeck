@@ -45,7 +45,12 @@ export function usePokemonList(pageSize = 30) {
                 };
             });
 
-            setPokemon((prev) => (append ? [...prev, ...mapped] : mapped));
+            setPokemon((prev) => {
+                if (!append) return mapped;
+                const existing = new Set(prev.map((p) => p.id));
+                const unique = mapped.filter((p) => !existing.has(p.id));
+                return [...prev, ...unique];
+            });
             setNextUrl(data.next);
         } catch (e) {
             setError(e instanceof Error ? e.message : "Failed to fetch");
